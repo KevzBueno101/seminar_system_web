@@ -65,11 +65,26 @@ if ($db) {
     <style>
         body {
             background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
         }
         .sidebar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            z-index: 1000;
+            overflow-y: auto;
         }
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
@@ -84,7 +99,19 @@ if ($db) {
             color: white;
         }
         .main-content {
+            flex: 1;
             padding: 30px;
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.25);
+            border-radius: 999px;
         }
         .stat-card {
             background: white;
@@ -92,6 +119,7 @@ if ($db) {
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease;
+            height: 100%;
         }
         .stat-card:hover {
             transform: translateY(-5px);
@@ -148,14 +176,174 @@ if ($db) {
             font-size: 12px;
             padding: 6px 12px;
         }
+        
+        .quick-actions-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .quick-action-btn {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px 20px;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .quick-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: white;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+        
+        .action-icon.create { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .action-icon.participants { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .action-icon.billing { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .action-icon.certificates { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        
+        .action-text strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        
+        .action-text small {
+            color: #6c757d;
+            font-size: 12px;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .table {
+            width: 100%;
+            margin-bottom: 0;
+        }
+        
+        .table th {
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+            padding: 12px 16px;
+        }
+        
+        .table td {
+            padding: 16px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .dashboard-title {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .dashboard-status {
+            flex-shrink: 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        @media (min-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+                width: 100%;
+            }
+            .quick-action-btn {
+                min-width: 100%;
+                margin-bottom: 10px;
+            }
+            .action-text strong {
+                font-size: 13px;
+            }
+            .action-text small {
+                font-size: 11px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .table-container {
+                padding: 15px;
+            }
+            .table th,
+            .table td {
+                padding: 8px 12px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 p-0">
-                <div class="sidebar p-4">
+    <div class="dashboard-layout">
+        <!-- Sidebar (fixed) -->
+        <aside class="sidebar p-4" aria-label="Admin sidebar">
                     <div class="text-center mb-4">
                         <h4><i class="fas fa-graduation-cap me-2"></i>SeminarMS</h4>
                     </div>
@@ -180,6 +368,12 @@ if ($db) {
                         <a class="nav-link" href="participants.php">
                             <i class="fas fa-users me-2"></i>Participants
                         </a>
+                        <a class="nav-link" href="billings.php">
+                            <i class="fas fa-file-invoice-dollar me-2"></i>Billings
+                        </a>
+                        <a class="nav-link" href="financial_reports.php">
+                            <i class="fas fa-chart-line me-2"></i>Financial Reports
+                        </a>
                         <a class="nav-link" href="generate_certificates.php">
                             <i class="fas fa-certificate me-2"></i>Generate Certificates
                         </a>
@@ -188,18 +382,16 @@ if ($db) {
                             <i class="fas fa-sign-out-alt me-2"></i>Logout
                         </a>
                     </nav>
-                </div>
-            </div>
-            
-            <!-- Main Content -->
-            <div class="col-md-9 col-lg-10">
-                <div class="main-content">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+                    <div class="dashboard-header">
+                        <div class="dashboard-title">
                             <h2 class="fw-bold">Dashboard</h2>
                             <p class="text-muted">Manage your seminars and participants</p>
                         </div>
-                        <div>
+                        <div class="dashboard-status">
                             <span class="badge bg-success">
                                 <i class="fas fa-circle me-1"></i>System Online
                             </span>
@@ -207,43 +399,37 @@ if ($db) {
                     </div>
                     
                     <!-- Statistics Cards -->
-                    <div class="row mb-4">
-                        <div class="col-md-4 mb-3">
-                            <div class="stat-card">
-                                <div class="d-flex align-items-center">
-                                    <div class="stat-icon seminars me-3">
-                                        <i class="fas fa-calendar-alt"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="mb-1"><?php echo $total_seminars; ?></h3>
-                                        <p class="text-muted mb-0">Total Seminars</p>
-                                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon seminars me-3">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-1"><?php echo $total_seminars; ?></h3>
+                                    <p class="text-muted mb-0">Total Seminars</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="stat-card">
-                                <div class="d-flex align-items-center">
-                                    <div class="stat-icon participants me-3">
-                                        <i class="fas fa-users"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="mb-1"><?php echo $total_participants; ?></h3>
-                                        <p class="text-muted mb-0">Total Participants</p>
-                                    </div>
+                        <div class="stat-card">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon participants me-3">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-1"><?php echo $total_participants; ?></h3>
+                                    <p class="text-muted mb-0">Total Participants</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="stat-card">
-                                <div class="d-flex align-items-center">
-                                    <div class="stat-icon upcoming me-3">
-                                        <i class="fas fa-clock"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="mb-1"><?php echo $upcoming_seminars; ?></h3>
-                                        <p class="text-muted mb-0">Upcoming Seminars</p>
-                                    </div>
+                        <div class="stat-card">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon upcoming me-3">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-1"><?php echo $upcoming_seminars; ?></h3>
+                                    <p class="text-muted mb-0">Upcoming Seminars</p>
                                 </div>
                             </div>
                         </div>
@@ -251,38 +437,56 @@ if ($db) {
                     
                     <!-- Quick Actions -->
                     <div class="row mb-4">
-                        <div class="col-md-4 mb-3">
-                            <a href="create_seminar.php" class="text-decoration-none">
-                                <div class="quick-action-card create">
-                                    <div class="icon">
-                                        <i class="fas fa-plus"></i>
-                                    </div>
-                                    <h5>Create New Seminar</h5>
-                                    <p class="text-muted">Set up a new seminar or training session</p>
+                        <div class="col-12">
+                            <div class="quick-actions-container">
+                                <h5 class="mb-3">Quick Actions</h5>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <a href="create_seminar.php" class="quick-action-btn">
+                                        <div class="d-flex align-items-center">
+                                            <div class="action-icon create">
+                                                <i class="fas fa-plus"></i>
+                                            </div>
+                                            <div class="action-text">
+                                                <strong>Create Seminar</strong>
+                                                <small>Set up new seminar</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="participants.php" class="quick-action-btn">
+                                        <div class="d-flex align-items-center">
+                                            <div class="action-icon participants">
+                                                <i class="fas fa-users"></i>
+                                            </div>
+                                            <div class="action-text">
+                                                <strong>Manage Participants</strong>
+                                                <small>View participants</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="billings.php" class="quick-action-btn">
+                                        <div class="d-flex align-items-center">
+                                            <div class="action-icon billing">
+                                                <i class="fas fa-file-invoice-dollar"></i>
+                                            </div>
+                                            <div class="action-text">
+                                                <strong>Billing</strong>
+                                                <small>Manage payments</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="generate_certificates.php" class="quick-action-btn">
+                                        <div class="d-flex align-items-center">
+                                            <div class="action-icon certificates">
+                                                <i class="fas fa-certificate"></i>
+                                            </div>
+                                            <div class="action-text">
+                                                <strong>Certificates</strong>
+                                                <small>Generate certs</small>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </a>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <a href="participants.php" class="text-decoration-none">
-                                <div class="quick-action-card participants">
-                                    <div class="icon">
-                                        <i class="fas fa-users"></i>
-                                    </div>
-                                    <h5>Manage Participants</h5>
-                                    <p class="text-muted">View and manage seminar participants</p>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <a href="generate_certificates.php" class="text-decoration-none">
-                                <div class="quick-action-card certificates">
-                                    <div class="icon">
-                                        <i class="fas fa-certificate"></i>
-                                    </div>
-                                    <h5>Generate Certificates</h5>
-                                    <p class="text-muted">Create and send certificates to participants</p>
-                                </div>
-                            </a>
+                            </div>
                         </div>
                     </div>
                     
@@ -358,9 +562,7 @@ if ($db) {
                             </div>
                         <?php endif; ?>
                     </div>
-                </div>
-            </div>
-        </div>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -34,7 +34,7 @@ $db = $database->getConnection();
 if ($db) {
     try {
         // Check tables exist
-        $tables = ['admins', 'seminars', 'participants'];
+        $tables = ['admins', 'seminars', 'participants', 'financial_sequences', 'billings', 'payments', 'receipts', 'audit_logs'];
         $all_exist = true;
         
         foreach ($tables as $table) {

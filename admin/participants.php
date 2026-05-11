@@ -87,11 +87,26 @@ if ($db) {
     <style>
         body {
             background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
         }
         .sidebar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            z-index: 1000;
+            overflow-y: auto;
         }
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
@@ -106,13 +121,61 @@ if ($db) {
             color: white;
         }
         .main-content {
+            flex: 1;
             padding: 30px;
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .dashboard-title {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .dashboard-actions {
+            flex-shrink: 0;
+        }
+        
         .table-container {
             background: white;
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            max-width: none;
+            width: 100%;
+        }
+        
+        .table {
+            width: 100%;
+            margin-bottom: 0;
+        }
+        
+        .table th {
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+            padding: 12px 16px;
+        }
+        
+        .table td {
+            padding: 16px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: #f8f9fa;
         }
         .filter-card {
             background: white;
@@ -132,6 +195,30 @@ if ($db) {
             font-size: 12px;
             padding: 6px 12px;
         }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+                width: 100%;
+            }
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .table-container {
+                padding: 15px;
+            }
+            .table th,
+            .table td {
+                padding: 8px 12px;
+            }
+        }
         .action-btn {
             padding: 6px 12px;
             font-size: 12px;
@@ -144,11 +231,9 @@ if ($db) {
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 p-0">
-                <div class="sidebar p-4">
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar p-4">
                     <div class="text-center mb-4">
                         <h4><i class="fas fa-graduation-cap me-2"></i>SeminarMS</h4>
                     </div>
@@ -173,6 +258,12 @@ if ($db) {
                         <a class="nav-link active" href="participants.php">
                             <i class="fas fa-users me-2"></i>Participants
                         </a>
+                        <a class="nav-link" href="billings.php">
+                            <i class="fas fa-file-invoice-dollar me-2"></i>Billings
+                        </a>
+                        <a class="nav-link" href="financial_reports.php">
+                            <i class="fas fa-chart-line me-2"></i>Financial Reports
+                        </a>
                         <a class="nav-link" href="generate_certificates.php">
                             <i class="fas fa-certificate me-2"></i>Generate Certificates
                         </a>
@@ -181,18 +272,16 @@ if ($db) {
                             <i class="fas fa-sign-out-alt me-2"></i>Logout
                         </a>
                     </nav>
-                </div>
-            </div>
-            
-            <!-- Main Content -->
-            <div class="col-md-9 col-lg-10">
-                <div class="main-content">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+                    <div class="dashboard-header">
+                        <div class="dashboard-title">
                             <h2 class="fw-bold">Participants Management</h2>
                             <p class="text-muted">View and manage seminar participants</p>
                         </div>
-                        <div>
+                        <div class="dashboard-actions">
                             <a href="dashboard.php" class="btn btn-outline-secondary">
                                 <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
                             </a>
@@ -384,9 +473,7 @@ if ($db) {
                             </div>
                         <?php endif; ?>
                     </div>
-                </div>
-            </div>
-        </div>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
