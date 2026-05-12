@@ -11,6 +11,7 @@ A complete, production-ready system for managing seminars, training sessions, pa
 - **Email Notifications**: Send certificates and updates via email using PHPMailer
 - **Public Registration**: Token-based public registration page for participants
 - **Responsive Design**: Modern Bootstrap 5 interface with mobile support
+- **Modern Dashboard Layout**: Professional flexbox-based admin interface with full-width content utilization
 
 ## Requirements
 
@@ -74,6 +75,44 @@ composer require fpdf/fpdf
    - Email: `admin@seminar.com`
    - Password: `admin123`
 
+## Layout and Design
+
+### Modern Dashboard Architecture
+
+The admin interface features a modern, responsive layout built with flexbox architecture:
+
+**Key Layout Features:**
+- **Fixed Sidebar**: 240px width with gradient design and smooth scrolling
+- **Full-Width Content**: Main content utilizes all available horizontal space
+- **Responsive Design**: Mobile-first approach with 768px breakpoint
+- **Semantic HTML**: Uses `<aside>` and `<main>` elements for accessibility
+- **Consistent Spacing**: Professional visual balance across all pages
+
+**Layout Structure:**
+```html
+<div class="dashboard-layout">
+    <aside class="sidebar p-4">
+        <!-- Navigation menu -->
+    </aside>
+    <main class="main-content">
+        <!-- Page content -->
+    </main>
+</div>
+```
+
+**Responsive Behavior:**
+- **Desktop (>768px)**: Fixed sidebar, flexible main content
+- **Mobile (≤768px)**: Stacked layout, full-width sidebar and content
+- **Tablet**: Adaptive scaling with proper component alignment
+
+**Pages with Updated Layout:**
+- Dashboard (statistics and quick actions)
+- Create/Edit Seminar (form layouts)
+- Participants Management (tables and filters)
+- Billing System (payment forms and receipts)
+- Financial Reports (charts and data tables)
+- Certificate Generation (seminar cards and templates)
+
 ## File Structure
 
 ```
@@ -89,6 +128,8 @@ composer require fpdf/fpdf
 │   ├── dashboard.php          # Main admin dashboard
 │   ├── create_seminar.php    # Create/edit seminars
 │   ├── participants.php       # Manage participants
+│   ├── billings.php           # Billing management and payments
+│   ├── financial_reports.php  # Financial reports and analytics
 │   └── generate_certificates.php # Certificate generation
 ├── public/
 │   └── register.php          # Public registration page
@@ -127,6 +168,28 @@ composer require fpdf/fpdf
 3. Choose to send via email or just generate
 4. Click "Generate Certificates"
 5. Certificates are created as PDFs and optionally emailed
+
+### Billing Management
+
+1. Go to "Billings" from the dashboard
+2. Generate billing for participants:
+   - Select participant and enter amount
+   - Set due date and add remarks
+   - Click "Generate Billing"
+3. Record payments:
+   - Find the billing in the list
+   - Enter payment details (amount, method, reference)
+   - Click "Record Payment" to generate receipt
+4. View receipts and billing statements
+5. Filter by status or seminar as needed
+
+### Financial Reports
+
+1. Navigate to "Financial Reports"
+2. View collection summaries and statistics
+3. Check outstanding balances
+4. Export reports for accounting purposes
+5. Filter by date range or seminar
 
 ### Public Registration
 

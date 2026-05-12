@@ -452,7 +452,7 @@ if ($db) {
                                                 <td>
                                                     <div class="btn-group btn-group-sm">
                                                         <a href="generate_certificates.php?seminar=<?php echo $participant['seminar_id']; ?>&participant=<?php echo $participant['id']; ?>" 
-                                                           class="btn btn-outline-success action-btn" title="Generate Certificate">
+                                                           class="btn btn-outline-success action-btn" title="Generate Certificate" target="_blank">
                                                             <i class="fas fa-certificate"></i>
                                                         </a>
                                                         <a href="mailto:<?php echo htmlspecialchars($participant['email']); ?>" 
