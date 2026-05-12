@@ -2,6 +2,11 @@
 
 class ReceiptPdf {
     public static function generate(PDO $db, $receiptId) {
+        // Define FPDF font path to fix font loading issue
+        if (!defined('FPDF_FONTPATH')) {
+            define('FPDF_FONTPATH', __DIR__ . '/../vendor/fpdf/font/');
+        }
+        
         require_once __DIR__ . '/../vendor/fpdf/fpdf.php';
 
         $receipt = self::getReceiptData($db, $receiptId);

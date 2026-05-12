@@ -74,8 +74,10 @@ function createTables() {
                     max_slots INT NOT NULL DEFAULT 50,
                     unique_token VARCHAR(64) NOT NULL UNIQUE,
                     status ENUM('open', 'closed') DEFAULT 'open',
+                    created_by INT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    FOREIGN KEY (created_by) REFERENCES admins(id) ON DELETE SET NULL
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
             ";
 

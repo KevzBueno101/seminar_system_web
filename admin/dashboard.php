@@ -68,6 +68,11 @@ if ($db) {
             margin: 0;
             padding: 0;
             min-height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1515378791036-0646a3e779d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
         }
         
         .dashboard-layout {
@@ -85,6 +90,9 @@ if ($db) {
             width: 240px;
             z-index: 1000;
             overflow-y: auto;
+            display: block !important;
+            visibility: visible !important;
+            transform: translateX(0) !important;
         }
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
@@ -105,6 +113,9 @@ if ($db) {
             width: calc(100% - 240px);
             min-height: 100vh;
             overflow-x: hidden;
+            background-color: rgba(248, 249, 250, 0.95);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
         }
         .sidebar::-webkit-scrollbar {
             width: 8px;

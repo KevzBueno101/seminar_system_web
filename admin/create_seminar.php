@@ -176,7 +176,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         speaker,
                         max_slots,
                         unique_token,
-                        status
+                        status,
+                        created_by
                     )
                     VALUES (
                         :title,
@@ -188,7 +189,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         :speaker,
                         :max_slots,
                         :unique_token,
-                        :status
+                        :status,
+                        :created_by
                     )
                 ");
 
@@ -202,7 +204,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':speaker' => $speaker,
                     ':max_slots' => $max_slots,
                     ':unique_token' => $unique_token,
-                    ':status' => $status
+                    ':status' => $status,
+                    ':created_by' => $_SESSION['admin_id']
                 ]);
 
                 $new_id = $db->lastInsertId();
@@ -239,11 +242,12 @@ try {
         FROM seminars s
         LEFT JOIN participants p
             ON s.id = p.seminar_id
+        WHERE s.created_by = :admin_id
         GROUP BY s.id
         ORDER BY s.created_at DESC
     ");
 
-    $stmt->execute();
+    $stmt->execute([':admin_id' => $_SESSION['admin_id']]);
 
     $all_seminars = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
