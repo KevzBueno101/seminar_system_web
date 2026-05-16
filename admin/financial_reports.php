@@ -75,7 +75,7 @@ function reportMoney($amount) {
             min-height: 100vh;
             width: 100%;
         }
-        .sidebar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: white; position: fixed; top: 0; left: 0; width: 240px; z-index: 1000; overflow-y: auto; }
+        .sidebar { background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%); min-height: 100vh; color: white; position: fixed; top: 0; left: 0; width: 240px; z-index: 1000; overflow-y: auto; }
         .sidebar .nav-link { color: rgba(255,255,255,.8); padding: 12px 20px; margin: 5px 0; border-radius: 8px; }
         .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,.2); color: white; }
         .main-content { 

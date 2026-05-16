@@ -2,12 +2,14 @@
 
 class ReceiptPdf {
     public static function generate(PDO $db, $receiptId) {
-        // Define FPDF font path to fix font loading issue
-        if (!defined('FPDF_FONTPATH')) {
-            define('FPDF_FONTPATH', __DIR__ . '/../vendor/fpdf/font/');
+        // Ensure FPDF is loaded (core fonts use the vendor/fpdf/font/* definitions)
+        if (!class_exists('FPDF')) {
+            $fpdfFile = __DIR__ . '/../vendor/fpdf/fpdf.php';
+            if (!file_exists($fpdfFile)) {
+                throw new Exception('FPDF library not found at: ' . $fpdfFile);
+            }
+            require_once $fpdfFile;
         }
-        
-        require_once __DIR__ . '/../vendor/fpdf/fpdf.php';
 
         $receipt = self::getReceiptData($db, $receiptId);
         if (!$receipt) {
@@ -87,7 +89,7 @@ class ReceiptPdf {
         $pdf->Cell(52, 8, self::clean($receipt['receipt_no']), 0, 1, 'R');
         $pdf->SetTextColor(20, 20, 20);
 
-        if ($receipt['receipt_status'] !== 'active') {
+        if (($receipt['receipt_status'] ?? '') !== 'active') {
             $pdf->SetTextColor(190, 30, 45);
             $pdf->SetFont('Arial', 'B', 36);
             $pdf->SetXY(45, 120);
@@ -183,3 +185,4 @@ class ReceiptPdf {
         return iconv('UTF-8', 'ISO-8859-1//TRANSLIT', (string)$value);
     }
 }
+

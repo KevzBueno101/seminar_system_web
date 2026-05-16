@@ -67,7 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
+            background-size: cover;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -88,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             padding: 60px 40px;
         }
         .login-info {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
             color: white;
             flex: 1;
             padding: 60px 40px;
@@ -97,11 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             justify-content: center;
         }
         .form-control:focus {
-            border-color: #667eea;
+            border-color: #0b7285;
             box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
         }
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
             border: none;
             padding: 12px 30px;
             font-weight: 600;

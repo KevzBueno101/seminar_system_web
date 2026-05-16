@@ -282,7 +282,7 @@ body{
 
 .copy-btn{
     border:none;
-    background:#667eea;
+    background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
     color:#fff;
     padding:8px 16px;
     border-radius:6px;

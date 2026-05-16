@@ -113,7 +113,7 @@ function methodLabel($method) {
             width: 100%;
         }
         .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
             min-height: 100vh;
             color: white;
             position: fixed;
@@ -204,7 +204,7 @@ function methodLabel($method) {
         .stat-card .label { color: #6c757d; font-size: 13px; }
         .stat-card .value { font-size: 24px; font-weight: 700; margin-top: 4px; }
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
             border: none;
         }
         .table td, .table th { vertical-align: middle; }

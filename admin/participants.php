@@ -98,7 +98,7 @@ if ($db) {
             width: 100%;
         }
         .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
             min-height: 100vh;
             color: white;
             position: fixed;
@@ -185,7 +185,7 @@ if ($db) {
             margin-bottom: 20px;
         }
         .seminar-stats {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
             color: white;
             border-radius: 10px;
             padding: 15px;

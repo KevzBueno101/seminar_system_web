@@ -73,9 +73,12 @@ $seminars = [];
 if ($db) {
     try {
         $stmt = $db->prepare("
-            SELECT s.*, COUNT(p.id) as participant_count
+            SELECT
+                s.*, 
+                COUNT(p.id) as participant_count
             FROM seminars s
             LEFT JOIN participants p ON s.id = p.seminar_id
+            GROUP BY s.id
             ORDER BY s.date DESC
         ");
         $stmt->execute();
@@ -314,7 +317,7 @@ function saveCertificateToDisk(array $participant, array $seminar): string|false
         body { background-color: #f8f9fa; margin: 0; padding: 0; min-height: 100vh; }
         .dashboard-layout { display: flex; min-height: 100vh; width: 100%; }
         .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
             min-height: 100vh; color: white;
             position: fixed; top: 0; left: 0;
             width: 240px; z-index: 1000; overflow-y: auto;
@@ -341,8 +344,8 @@ function saveCertificateToDisk(array $participant, array $seminar): string|false
             background: white; border-radius: 15px;
             padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); width: 100%;
         }
-        .seminar-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.seminar-card {
+            background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
             color: white; border-radius: 12px; padding: 20px;
             margin-bottom: 20px; transition: transform 0.3s ease;
         }
@@ -351,19 +354,19 @@ function saveCertificateToDisk(array $participant, array $seminar): string|false
             background: rgba(255,255,255,0.2); border-radius: 20px;
             padding: 5px 15px; font-size: 14px; white-space: nowrap;
         }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.btn-primary {
+            background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
             border: none; padding: 12px 30px; font-weight: 600; transition: all 0.3s ease;
         }
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+box-shadow: 0 5px 15px rgba(42,157,143,0.4);
         }
         .feature-icon {
             width: 60px; height: 60px; border-radius: 50%;
-            background: rgba(102,126,234,0.12);
+background: rgba(42,157,143,0.15);
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px; margin-bottom: 15px; color: #667eea;
+color: #2a9d8f;
         }
         .template-preview {
             border: 2px dashed #dee2e6; border-radius: 10px;

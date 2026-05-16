@@ -68,10 +68,10 @@ if ($db) {
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background-image: url('https://images.unsplash.com/photo-1515378791036-0646a3e779d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+background-image: none;
             background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+background-position: initial;
+background-attachment: initial;
             background-repeat: no-repeat;
         }
         
@@ -81,7 +81,7 @@ if ($db) {
             width: 100%;
         }
         .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
             min-height: 100vh;
             color: white;
             position: fixed;
@@ -145,9 +145,9 @@ if ($db) {
             font-size: 24px;
             color: white;
         }
-        .stat-icon.seminars { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .stat-icon.participants { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .stat-icon.upcoming { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.stat-icon.seminars { background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%); }
+.stat-icon.participants { background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%); }
+.stat-icon.upcoming { background: linear-gradient(135deg, #0b7285 0%, #4aa3ff 100%); }
         
         .quick-action-card {
             background: white;
@@ -173,8 +173,8 @@ if ($db) {
             color: white;
             margin: 0 auto 20px;
         }
-        .quick-action-card.create .icon { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .quick-action-card.participants .icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .quick-action-card.create .icon { background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%); }
+.quick-action-card.participants .icon { background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%); }
         .quick-action-card.certificates .icon { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
         
         .table-container {
@@ -228,10 +228,10 @@ if ($db) {
             font-size: 16px;
         }
         
-        .action-icon.create { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .action-icon.participants { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .action-icon.billing { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .action-icon.certificates { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+.action-icon.create { background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%); }
+.action-icon.participants { background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%); }
+.action-icon.billing { background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%); }
+.action-icon.certificates { background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%); }
         
         .action-text strong {
             display: block;
