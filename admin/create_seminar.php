@@ -275,26 +275,128 @@ try {
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
+    body{
+        background-color:#f8f9fa;
+        margin:0;
+        padding:0;
+        min-height:100vh;
+    }
 
-body{
-    background:#f8f9fa;
-}
+    .dashboard-layout{
+        display:flex;
+        min-height:100vh;
+        width:100%;
+    }
 
-.copy-btn{
-    border:none;
-    background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
-    color:#fff;
-    padding:8px 16px;
-    border-radius:6px;
-}
+    .sidebar{
+        background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
+        min-height:100vh;
+        color:white;
+        position:fixed;
+        top:0;
+        left:0;
+        width:240px;
+        z-index:1000;
+        overflow-y:auto;
+        display:block !important;
+        visibility:visible !important;
+        transform:none !important;
+    }
 
+    .sidebar .nav-link{
+        color:rgba(255,255,255,0.8);
+        padding:12px 20px;
+        margin:5px 0;
+        border-radius:8px;
+        transition:all 0.3s ease;
+    }
+
+    .sidebar .nav-link:hover,
+    .sidebar .nav-link.active{
+        background: rgba(255,255,255,0.2);
+        color:white;
+    }
+
+    .main-content{
+        flex:1;
+        padding:30px;
+        margin-left:240px;
+        width:calc(100% - 240px);
+        min-height:100vh;
+        overflow-x:hidden;
+        background-color:rgba(248,249,250,0.95);
+        backdrop-filter:blur(5px);
+        -webkit-backdrop-filter:blur(5px);
+    }
+
+    .sidebar::-webkit-scrollbar{ width:8px; }
+    .sidebar::-webkit-scrollbar-thumb{ background:rgba(255,255,255,0.25); border-radius:999px; }
+
+    @media (max-width: 768px){
+        .sidebar{ width:100%; height:auto; position:relative; }
+        .main-content{ margin-left:0; padding:20px; width:100%; }
+    }
+
+    .copy-btn{
+        border:none;
+        background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
+        color:#fff;
+        padding:8px 16px;
+        border-radius:6px;
+    }
 </style>
 
 </head>
 
-<body>
+<body style="margin-left:0;">
 
-<div class="container py-5">
+<div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar p-4" aria-label="Admin sidebar">
+        <div class="text-center mb-4">
+            <h4><i class="fas fa-graduation-cap me-2"></i>SeminarMS</h4>
+        </div>
+
+        <div class="mb-4">
+            <div class="text-center">
+                <div class="mb-3">
+                    <i class="fas fa-user-circle fa-3x"></i>
+                </div>
+                <h6><?php echo htmlspecialchars($_SESSION['admin_name']); ?></h6>
+                <small><?php echo htmlspecialchars($_SESSION['admin_email']); ?></small>
+            </div>
+        </div>
+
+        <nav class="nav flex-column">
+            <a class="nav-link" href="dashboard.php">
+                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+            </a>
+            <a class="nav-link active" href="create_seminar.php">
+                <i class="fas fa-plus-circle me-2"></i>Create Seminar
+            </a>
+            <a class="nav-link" href="participants.php">
+                <i class="fas fa-users me-2"></i>Participants
+            </a>
+            <a class="nav-link" href="billings.php">
+                <i class="fas fa-file-invoice-dollar me-2"></i>Billings
+            </a>
+            <a class="nav-link" href="financial_reports.php">
+                <i class="fas fa-chart-line me-2"></i>Financial Reports
+            </a>
+            <a class="nav-link" href="generate_certificates.php">
+                <i class="fas fa-certificate me-2"></i>Generate Certificates
+            </a>
+            <hr class="my-3" style="border-color: rgba(255,255,255,0.3);">
+            <a class="nav-link" href="../auth/logout.php">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container py-5">
+
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
