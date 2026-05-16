@@ -199,13 +199,20 @@ function reportMoney($amount) {
         
         <!-- Main Content -->
         <main class="main-content" style="padding-top: 20px;">
-                <div class="dashboard-header">
+<div class="dashboard-header">
                     <div class="dashboard-title">
                         <h2 class="fw-bold">Financial Reports</h2>
                         <p class="text-muted mb-0">Collection summaries and outstanding balances</p>
                     </div>
-                    <div class="dashboard-actions">
+                    <div class="dashboard-actions d-flex align-items-center gap-2">
                         <a href="billings.php" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i>Back to Billings</a>
+                        <a
+                            href="export_financial_reports_xlsx.php"
+                            class="btn btn-outline-success"
+                            title="Export reports to Excel (.xlsx compatible)"
+                        >
+                            <i class="fas fa-file-excel me-1"></i>Export XLSX
+                        </a>
                     </div>
                 </div>
 

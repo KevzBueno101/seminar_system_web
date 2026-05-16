@@ -463,10 +463,13 @@ function methodLabel($method) {
                                 </form>
                             </div>
 
-                            <div class="panel">
+<div class="panel">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="mb-0">Billings</h5>
-                                    <span class="badge bg-info"><?php echo count($billings); ?> records</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-info"><?php echo count($billings); ?> records</span>
+
+                                    </div>
                                 </div>
                                 <?php if (empty($billings)): ?>
                                     <div class="text-center py-5">
