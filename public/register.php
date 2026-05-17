@@ -101,8 +101,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $seminar) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+body {
+            background: linear-gradient(135deg, #0b7285 0%, #1e8f59 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $seminar) {
             min-height: 600px;
         }
         .seminar-info {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0b7285 0%, #1e8f59 100%);
             color: white;
             flex: 1;
             padding: 50px 40px;
@@ -133,11 +133,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $seminar) {
             padding: 50px 40px;
         }
         .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            border-color: #2a9d8f;
+            box-shadow: 0 0 0 0.2rem rgba(42, 157, 143, 0.25);
         }
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
             border: none;
             padding: 12px 30px;
             font-weight: 600;
@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $seminar) {
         }
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(11, 114, 133, 0.35);
         }
         .alert {
             border-radius: 10px;
