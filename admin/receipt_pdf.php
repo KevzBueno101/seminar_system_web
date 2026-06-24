@@ -1,25 +1,13 @@
 <?php
 session_start();
 
-// Ensure FPDF core font definitions can be included reliably.
-// Some runtime paths/load orders can break FPDF's font include resolution.
-if (!defined('FPDF_FONTPATH')) {
-    $fpdfFontPath = realpath(__DIR__ . '/../vendor/fpdf/font');
-    if ($fpdfFontPath) {
-        define('FPDF_FONTPATH', $fpdfFontPath . DIRECTORY_SEPARATOR);
-    }
-}
-
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../templates/ReceiptPdf.php';
-
 
 if (!isset($_SESSION['admin_id'])) {
     header('Location: ../auth/login.php');
     exit();
 }
-
-createFinancialTables();
 
 $receiptId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($receiptId <= 0) {

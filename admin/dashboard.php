@@ -275,7 +275,7 @@ background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
         
         .dashboard-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
             flex-wrap: wrap;

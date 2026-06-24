@@ -63,7 +63,7 @@ $filenameBase = 'financial_reports_' . date('Y-m-d_H-i-s');
 // Use .xls filename for better compatibility with Excel/WPS when serving HTML as Excel
 $filename = $filenameBase . '.xls';
 header('Content-Type: application/vnd.ms-excel; charset=utf-8');
-header("Content-Disposition: attachment; filename='" . $filename);
+header('Content-Disposition: attachment; filename="' . $filename . '"');
 header('Pragma: no-cache');
 header('Expires: 0');
 ?>

@@ -34,11 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $admin = $stmt->fetch();
                     
                     if (password_verify($password, $admin['password'])) {
-                        // Login successful
+                        session_regenerate_id(true);
                         $_SESSION['admin_id'] = $admin['id'];
                         $_SESSION['admin_name'] = $admin['name'];
                         $_SESSION['admin_email'] = $admin['email'];
-                        
+
                         header('Location: ../admin/dashboard.php');
                         exit();
                     } else {

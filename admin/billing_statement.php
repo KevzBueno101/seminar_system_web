@@ -9,8 +9,6 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-createFinancialTables();
-
 $billingId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($billingId <= 0) {
     http_response_code(400);

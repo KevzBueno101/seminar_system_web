@@ -1,6 +1,14 @@
 <?php
 
 class ReceiptPdf {
+    // --- Page geometry constants (58mm wide thermal) ---
+    // Usable width: 58mm - 2mm left margin - 2mm right margin = 54mm
+    const PAGE_W    = 58;
+    const MARGIN    = 2;
+    const USABLE_W  = 54;   // PAGE_W - 2*MARGIN
+    const LEFT_X    = 2;    // left margin
+    const RIGHT_X   = 56;   // PAGE_W - MARGIN
+
     public static function generate(PDO $db, $receiptId) {
         if (!defined('FPDF_FONTPATH')) {
             $fontPath = realpath(__DIR__ . '/../vendor/fpdf/font');
@@ -32,21 +40,18 @@ class ReceiptPdf {
         $filename = self::safeFilename($receipt['receipt_no']) . '.pdf';
         $path = $dir . '/' . $filename;
 
-        // Thermal/POS friendly canvas size (58mm wide). Height is automatic via content.
-        // FPDF supports custom page size: array(width_mm, height_mm). We'll use a tall height to fit content.
-        $pdf = new FPDF('P', 'mm', [58, 220]);
+        // 58mm wide, 220mm tall thermal/POS page
+        $pdf = new FPDF('P', 'mm', [self::PAGE_W, 220]);
         $pdf->SetTitle('Official Receipt ' . $receipt['receipt_no']);
         $pdf->SetAuthor($receipt['organization']);
 
-        $pdf->SetMargins(2, 2, 2);
+        $pdf->SetMargins(self::MARGIN, self::MARGIN, self::MARGIN);
         $pdf->SetAutoPageBreak(true, 4);
         $pdf->AddPage();
-
 
         self::header($pdf, $receipt);
         self::receiptBody($pdf, $receipt);
         self::footer($pdf, $receipt);
-
 
         $pdf->Output($path, 'F');
         return 'receipts/' . $filename;
@@ -98,158 +103,161 @@ class ReceiptPdf {
     }
 
     private static function header(FPDF $pdf, array $receipt) {
-        // Only show logo if the actual image file exists — no placeholder square
-        $logo = __DIR__ . '/logo.png';
-        $hasLogo = file_exists($logo);
+        $L = self::LEFT_X;
+        $W = self::USABLE_W; // 54mm
 
-        $leftX = $hasLogo ? 42 : 16;
-        $orgW  = $hasLogo ? 100 : 120;
-
-        // Logo removed as requested (font/layout only).
-
-
-        // Organization name & subtitle (left side)
-        // (Removed logo sizing influence by forcing smaller typography.)
-        // ===== Compact thermal header (fits 58mm width) =====
-        // Font sizes reduced for POS readability.
         $pdf->SetTextColor(20, 20, 20);
 
-        // Left org block
-        $pdf->SetFont('Courier', 'B', 10);
-        $pdf->SetXY(3, 6);
-        $pdf->Cell(40, 5, self::clean($receipt['organization']), 0, 1, 'L');
+        // --- Organization name ---
+        $pdf->SetFont('Courier', 'B', 7);
+        $pdf->SetXY($L, 3);
+        $pdf->Cell($W, 4, self::clean($receipt['organization']), 0, 1, 'C');
 
-        $pdf->SetFont('Courier', '', 8);
-        $pdf->SetX(3);
-        $pdf->Cell(40, 4, 'Seminar Management System', 0, 1, 'L');
-        $pdf->SetX(3);
-        $pdf->Cell(40, 4, 'Official payment receipt', 0, 1, 'L');
+        // --- Subtitle lines ---
+        $pdf->SetFont('Courier', '', 5);
+        $pdf->SetX($L);
+        $pdf->Cell($W, 3, 'Seminar Management System', 0, 1, 'C');
+        $pdf->SetX($L);
+        $pdf->Cell($W, 3, 'Official Payment Receipt', 0, 1, 'C');
 
-        // Right title/receipt no (right aligned within 58mm)
-        $rightX = 55;
-        $pdf->SetFont('Courier', 'B', 10);
-        $pdf->SetXY($rightX - 23, 6);
-        $pdf->Cell(23, 5, 'RECEIPT', 0, 1, 'R');
+        // --- Divider ---
+        $pdf->SetDrawColor(160, 160, 160);
+        $lineY = $pdf->GetY() + 1;
+        $pdf->Line($L, $lineY, self::RIGHT_X, $lineY);
+        $pdf->Ln(3);
 
-        $pdf->SetFont('Courier', 'B', 9);
+        // --- OFFICIAL RECEIPT label ---
+        $pdf->SetFont('Courier', 'B', 6);
+        $pdf->SetX($L);
+        $pdf->Cell($W, 3, 'OFFICIAL RECEIPT', 0, 1, 'C');
+
+        // --- Receipt No ---
+        $pdf->SetFont('Courier', 'B', 7);
         $pdf->SetTextColor(80, 0, 120);
-        $pdf->SetX($rightX - 23);
-        $pdf->Cell(23, 5, self::clean($receipt['receipt_no']), 0, 1, 'R');
+        $pdf->SetX($L);
+        $pdf->Cell($W, 4, self::clean($receipt['receipt_no']), 0, 1, 'C');
         $pdf->SetTextColor(20, 20, 20);
 
-        // VOID/CANCELLED (kept, but scaled down and centered)
+        // --- VOID / CANCELLED stamp ---
         if (($receipt['receipt_status'] ?? '') !== 'active') {
             $pdf->SetTextColor(190, 30, 45);
-            $pdf->SetFont('Courier', 'B', 18);
-            $pdf->SetXY(18, 44);
-            $pdf->Cell(22, 7, strtoupper($receipt['receipt_status']), 0, 1, 'C');
+            $pdf->SetFont('Courier', 'B', 12);
+            $pdf->SetX($L);
+            $pdf->Cell($W, 5, strtoupper($receipt['receipt_status']), 0, 1, 'C');
             $pdf->SetTextColor(20, 20, 20);
         }
 
-        // Divider line under header
-        $pdf->SetDrawColor(200, 200, 200);
-        $pdf->Line(2, 46, 56, 46);
-
+        // --- Bottom divider ---
+        $pdf->SetDrawColor(160, 160, 160);
+        $lineY2 = $pdf->GetY() + 1;
+        $pdf->Line($L, $lineY2, self::RIGHT_X, $lineY2);
+        $pdf->Ln(3);
     }
 
     private static function receiptBody(FPDF $pdf, array $receipt) {
-        // Page margins
-        $leftX  = 16;
-        $labelW = 45;  // width of the label column
-        $valueX = $leftX + $labelW;
-        $valueW = 178 - $labelW; // remaining width
+        $L  = self::LEFT_X;
+        $W  = self::USABLE_W; // 54mm
 
-        $pdf->SetXY($leftX, 52);
+        // Label ~41%, value ~59%
+        $labelW = 22;
+        $valueW = $W - $labelW; // 32mm
 
-        // Participant info rows
+        // --- Participant / seminar info ---
         $fields = [
-            'Participant'   => $receipt['participant_name'],
-            'Email'         => $receipt['participant_email'],
-            'Seminar'       => $receipt['seminar_title'],
-            'Seminar Date'  => date('F d, Y', strtotime($receipt['seminar_date'])),
-            'Venue'         => $receipt['venue'],
+            'Participant'  => $receipt['participant_name'],
+            'Email'        => $receipt['participant_email'],
+            'Seminar'      => $receipt['seminar_title'],
+            'Seminar Date' => date('M d, Y', strtotime($receipt['seminar_date'])),
+            'Venue'        => $receipt['venue'],
         ];
 
         foreach ($fields as $label => $value) {
-            self::labelValue($pdf, $leftX, $labelW, $valueW, $label, (string)$value);
+            self::labelValue($pdf, $L, $labelW, $valueW, $label, (string)$value);
         }
 
-        // Table
-        $pdf->Ln(8);
-        $colDesc = 88;
-        $colRef  = 50;
-        $colAmt  = 40;
+        $pdf->Ln(2);
 
-        $pdf->SetFillColor(240, 240, 240);
-        $pdf->SetDrawColor(200, 200, 200);
+        // --- Payment table ---
+        // 54mm usable: Desc 22 | Ref 18 | Amt 14 = 54mm
+        $colDesc = 22;
+        $colRef  = 18;
+        $colAmt  = 14;
+
+        $pdf->SetFillColor(230, 230, 230);
+        $pdf->SetDrawColor(160, 160, 160);
         $pdf->SetTextColor(20, 20, 20);
 
         // Table header
-        $pdf->SetFont('Times', 'B', 9);
-
-        $pdf->SetX($leftX);
-        $pdf->Cell($colDesc, 9, 'Description', 1, 0, 'L', true);
-        $pdf->Cell($colRef,  9, 'Reference',   1, 0, 'L', true);
-        $pdf->Cell($colAmt,  9, 'Amount',       1, 1, 'R', true);
+        $pdf->SetFont('Courier', 'B', 5);
+        $pdf->SetX($L);
+        $pdf->Cell($colDesc, 5, 'Description', 1, 0, 'L', true);
+        $pdf->Cell($colRef,  5, 'Reference',   1, 0, 'L', true);
+        $pdf->Cell($colAmt,  5, 'Amount',       1, 1, 'R', true);
 
         // Table row
-        $pdf->SetFont('Times', '', 9);
-
-        $pdf->SetX($leftX);
-        $pdf->Cell($colDesc, 10, 'Seminar payment',                   1, 0, 'L');
-        $pdf->Cell($colRef,  10, self::clean($receipt['billing_no']), 1, 0, 'L');
-        $pdf->Cell($colAmt,  10, self::money($receipt['amount_paid']),1, 1, 'R');
+        $pdf->SetFont('Courier', '', 5);
+        $pdf->SetX($L);
+        $pdf->Cell($colDesc, 5, 'Seminar payment',                    1, 0, 'L');
+        $pdf->Cell($colRef,  5, self::clean($receipt['billing_no']),  1, 0, 'L');
+        $pdf->Cell($colAmt,  5, self::money($receipt['amount_paid']), 1, 1, 'R');
 
         // Total row
-        $pdf->SetFont('Times', 'B', 9);
+        $pdf->SetFont('Courier', 'B', 5);
+        $pdf->SetX($L);
+        $pdf->Cell($colDesc + $colRef, 5, 'Total Paid', 1, 0, 'R');
+        $pdf->Cell($colAmt,            5, self::money($receipt['amount_paid']), 1, 1, 'R');
 
-        $pdf->SetX($leftX);
-        $pdf->Cell($colDesc + $colRef, 10, 'Total Paid', 1, 0, 'R');
-        $pdf->Cell($colAmt,            10, self::money($receipt['amount_paid']), 1, 1, 'R');
+        $pdf->Ln(2);
 
-        // Payment details
-        $pdf->Ln(8);
-        $pdf->SetTextColor(20, 20, 20);
-
+        // --- Payment details ---
         $details = [
-            'Payment Method'   => self::methodLabel($receipt['payment_method']),
-            'Reference Number' => $receipt['reference_number'] ?: 'N/A',
-            'Date Paid'        => date('F d, Y h:i A', strtotime($receipt['payment_date'])),
-            'Processed By'     => $receipt['received_by_name'] ?: $receipt['issued_by_name'],
-            'Issued At'        => date('F d, Y h:i A', strtotime($receipt['issued_at'])),
-            'Remaining Balance'=> self::money($receipt['balance']),
+            'Payment Method'    => self::methodLabel($receipt['payment_method']),
+            'Reference Number'  => $receipt['reference_number'] ?: 'N/A',
+            'Date Paid'         => date('M d, Y g:i A', strtotime($receipt['payment_date'])),
+            'Processed By'      => $receipt['received_by_name'] ?: $receipt['issued_by_name'],
+            'Issued At'         => date('M d, Y g:i A', strtotime($receipt['issued_at'])),
+            'Balance'           => self::money($receipt['balance']),
         ];
 
         foreach ($details as $label => $value) {
-            self::labelValue($pdf, $leftX, $labelW, $valueW, $label, (string)$value);
+            self::labelValue($pdf, $L, $labelW, $valueW, $label, (string)$value);
         }
-        // No signature block
     }
 
     private static function footer(FPDF $pdf, array $receipt) {
-        $pdf->SetY(266);
-        $pdf->SetDrawColor(200, 200, 200);
-        $pdf->Line(16, 262, 194, 262);
-        $pdf->SetFont('Times', '', 8);
+        $L = self::LEFT_X;
+        $W = self::USABLE_W;
+
+        $pdf->Ln(4);
+
+        // Divider
+        $pdf->SetDrawColor(180, 180, 180);
+        $pdf->Line($L, $pdf->GetY(), self::RIGHT_X, $pdf->GetY());
+        $pdf->Ln(2);
+
+        $pdf->SetFont('Courier', '', 5);
         $pdf->SetTextColor(120, 120, 120);
-        $pdf->Cell(0, 5, 'Generated: ' . date('Y-m-d H:i:s') . '  |  Receipt ID: ' . $receipt['id'], 0, 1, 'C');
-        $pdf->Cell(0, 5, 'This receipt is system-generated. Keep this copy for your records.', 0, 1, 'C');
+
+        $pdf->SetX($L);
+        $pdf->Cell($W, 3, 'Generated: ' . date('Y-m-d H:i:s'), 0, 1, 'C');
+        $pdf->SetX($L);
+        $pdf->Cell($W, 3, 'Receipt ID: ' . $receipt['id'], 0, 1, 'C');
+        $pdf->SetX($L);
+        $pdf->Cell($W, 3, 'Keep this copy for your records.', 0, 1, 'C');
     }
 
     /**
-     * Renders a label-value row with proper left-alignment and manual word wrap.
+     * Renders a label : value row, with word-wrap on the value side.
      */
     private static function labelValue(FPDF $pdf, $leftX, $labelW, $valueW, $label, $value) {
-        $value = self::clean($value);
-        $cellH = 6;
+        $value  = self::clean($value);
+        $cellH  = 4;
 
         $pdf->SetX($leftX);
-        $pdf->SetFont('Times', 'B', 9);
-
+        $pdf->SetFont('Courier', 'B', 6);
         $pdf->Cell($labelW, $cellH, self::clean($label) . ':', 0, 0, 'L');
 
-        $pdf->SetFont('Times', '', 9);
-
+        $pdf->SetFont('Courier', '', 6);
         $lines = self::wrapText($pdf, $value, $valueW);
 
         foreach ($lines as $i => $line) {

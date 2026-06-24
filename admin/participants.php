@@ -74,6 +74,30 @@ if ($db) {
         error_log("Participants error: " . $exception->getMessage());
     }
 }
+
+// Build CSV content server-side for safe JS export
+$csv_content = '';
+if (!empty($participants)) {
+    $csv_lines = ["Name,Email,Seminar,Date,Registered"];
+    foreach ($participants as $p) {
+        $row = [
+            $p['name'],
+            $p['email'],
+            $p['title'],
+            $p['date'],
+            $p['registered_at'],
+        ];
+        $escaped = array_map(function ($v) {
+            $v = str_replace('"', '""', (string)$v);
+            if (strpbrk($v, ",\"\n\r") !== false) {
+                $v = '"' . $v . '"';
+            }
+            return $v;
+        }, $row);
+        $csv_lines[] = implode(',', $escaped);
+    }
+    $csv_content = implode("\r\n", $csv_lines) . "\r\n";
+}
 ?>
 
 <!DOCTYPE html>
@@ -297,7 +321,7 @@ background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
 
                     <?php if (!empty($success)): ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <i class="fas fa-check-circle me-2"></i><?php echo $success; ?>
+                            <i class="fas fa-check-circle me-2"></i><?php echo htmlspecialchars($success); ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     <?php endif; ?>
@@ -488,12 +512,7 @@ background: linear-gradient(135deg, #0b7285 0%, #2a9d8f 100%);
         }
         
         function exportData() {
-            // Simple CSV export
-            let csv = 'Name,Email,Seminar,Date,Registered\n';
-            <?php foreach ($participants as $participant): ?>
-                csv += '<?php echo addslashes($participant['name']); ?>,<?php echo addslashes($participant['email']); ?>,<?php echo addslashes($participant['title']); ?>,<?php echo $participant['date']; ?>,<?php echo $participant['registered_at']; ?>\n';
-            <?php endforeach; ?>
-            
+            const csv = <?php echo json_encode($csv_content, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');

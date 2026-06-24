@@ -8,8 +8,6 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-createFinancialTables();
-
 $database = new Database();
 $db = $database->getConnection();
 $service = new BillingService($db);

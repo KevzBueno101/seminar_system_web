@@ -8,8 +8,6 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-createFinancialTables();
-
 $database = new Database();
 $db = $database->getConnection();
 $service = new BillingService($db);
@@ -283,7 +281,7 @@ function methodLabel($method) {
                     <?php endif; ?>
                     <?php if ($success): ?>
                         <div class="alert alert-success alert-dismissible fade show">
-                            <i class="fas fa-check-circle me-2"></i><?php echo $success; ?>
+                            <i class="fas fa-check-circle me-2"></i><?php echo htmlspecialchars($success); ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     <?php endif; ?>
